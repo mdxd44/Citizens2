@@ -22,13 +22,10 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.BaseEncoding;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 
 import net.citizensnpcs.Settings.Setting;
 import net.citizensnpcs.api.CitizensAPI;
@@ -432,7 +429,6 @@ public class CommandTrait extends Trait {
     }
 
     private static class NPCCommand {
-        String bungeeServer;
         String command;
         int cooldown;
         int delay;
@@ -456,8 +452,6 @@ public class CommandTrait extends Trait {
             this.n = n;
             this.delay = delay;
             this.globalCooldown = globalCooldown;
-            List<String> split = Splitter.on(' ').omitEmptyStrings().trimResults().splitToList(command);
-            this.bungeeServer = split.size() == 2 && split.get(0).equalsIgnoreCase("server") ? split.get(1) : null;
         }
 
         public void run(NPC npc, Player clicker) {
@@ -475,18 +469,10 @@ public class CommandTrait extends Trait {
                 clicker.setOp(true);
             }
 
-            if (bungeeServer != null) {
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("Connect");
-                out.writeUTF(bungeeServer);
-
-                clicker.sendPluginMessage(CitizensAPI.getPlugin(), "BungeeCord", out.toByteArray());
-            } else {
-                try {
-                    clicker.chat("/" + interpolatedCommand);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
+            try {
+                clicker.chat("/" + interpolatedCommand);
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
 
             if (op) {
