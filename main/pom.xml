@@ -21,6 +21,12 @@
 	</properties>
 
 	<repositories>
+		<!-- Fixes "org.bstats:bstats-bukkit:jar:1.7 was not found" -->
+		<repository>
+			<id>bstats-1.7-not-found-fix</id>
+			<url>https://repo.phoenix616.dev/</url>
+		</repository>
+
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
